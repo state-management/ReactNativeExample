@@ -1,4 +1,4 @@
-import { Command } from 'simple-state-machine';
+import { Command } from '@state-management/state-machine-react';
 import { counterKey } from '../constants/stateKeys';
 
 export class SetInitialCounterCommand extends Command<number> {

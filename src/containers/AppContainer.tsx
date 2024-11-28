@@ -1,14 +1,15 @@
 import React, { useEffect } from 'react';
 import { View } from 'react-native';
-import { StateMachine } from 'simple-state-machine';
+import {useDispatcher} from '@state-management/state-machine-react';
 import { SetInitialCounterCommand } from '../commands/SetInitialCounterCommand.ts';
 import CounterDisplay from '../components/CounterDisplay.tsx';
 import CounterControl from '../components/CounterControl.tsx';
 
 const AppContainer: React.FC = () => {
+    const dispatch = useDispatcher();
+
     useEffect(() => {
-        const stateMachine = StateMachine.getInstance();
-        stateMachine.dispatch(new SetInitialCounterCommand(0));
+        dispatch(new SetInitialCounterCommand(0));
     }, []);
 
     return (
