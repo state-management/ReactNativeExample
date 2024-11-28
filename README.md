@@ -35,6 +35,11 @@ yarn android
 ### For iOS
 
 ```bash
+# for the first time run, install pods, not required for subsequent runs.
+cd ios
+pod install --repo-update
+cd ..
+
 # using npm
 npm run ios
 
