@@ -1,24 +1,12 @@
 import React from 'react';
 import { render } from '@testing-library/react-native';
 import AppContainer from '../../../src/containers/AppContainer.tsx';
-import { StateMachine } from 'simple-state-machine';
+import { StateMachine } from '@state-management/simple-state-machine';
+import {setupMockStateMachine} from "@state-management/state-machine-react/tests";
 import { counterKey } from '../../../src/constants/stateKeys.ts';
 import {SetInitialCounterCommand} from "../../../src/commands/SetInitialCounterCommand.ts";
 
-jest.mock('simple-state-machine', () => {
-    const actualModule = jest.requireActual('simple-state-machine');
-    const mockStateMachineInstance = {
-        dispatch: jest.fn(),
-        onChange: jest.fn(),
-    };
-
-    return {
-        ...actualModule,
-        StateMachine: {
-            getInstance: jest.fn(() => mockStateMachineInstance),
-        },
-    };
-});
+jest.mock('@state-management/simple-state-machine');
 
 jest.mock('../../../src/components/CounterDisplay.tsx', () => {
     const { Text } = require('react-native');
@@ -37,16 +25,19 @@ jest.mock('../../../src/components/CounterControl.tsx', () => {
 });
 
 describe('Container', () => {
-    let mockStateMachineInstance: any;
+    let mockStateMachine: any;
 
     beforeEach(() => {
-        mockStateMachineInstance = StateMachine.getInstance();
+        // Reset mock before each test
+        mockStateMachine = setupMockStateMachine({});
+
+        (StateMachine.getInstance as jest.Mock).mockReturnValue(mockStateMachine);
         jest.clearAllMocks();
     });
 
     it('renders CounterDisplay and CounterControl components and sets initial value for counter', async () => {
         const mockOnChangeCallback = jest.fn();
-        mockStateMachineInstance.onChange.mockImplementation((key, callback) => {
+        mockStateMachine.onChange.mockImplementation((key, callback) => {
             if (key === counterKey) {
                 mockOnChangeCallback.mockImplementation(callback);
                 return { unsubscribe: jest.fn() }; // Return an unsubscribe mock
@@ -58,6 +49,6 @@ describe('Container', () => {
         expect(getByText('Counter Value: 0')).toBeTruthy();
         expect(getByText('Increment')).toBeTruthy();
 
-        expect(mockStateMachineInstance.dispatch).toHaveBeenCalledWith(expect.any(SetInitialCounterCommand));
+        expect(mockStateMachine.dispatch).toHaveBeenCalledWith(expect.any(SetInitialCounterCommand));
     });
 });

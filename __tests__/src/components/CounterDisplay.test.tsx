@@ -1,30 +1,20 @@
 import React, {act} from 'react';
 import { render, waitFor } from '@testing-library/react-native';
 import CounterDisplay from '../../../src/components/CounterDisplay.tsx';
-import { StateMachine } from 'simple-state-machine';
+import { StateMachine } from '@state-management/simple-state-machine';
+import {setupMockStateMachine} from "@state-management/state-machine-react/tests";
 import { counterKey } from '../../../src/constants/stateKeys.ts';
 
-jest.mock('simple-state-machine', () => {
-    const actualModule = jest.requireActual('simple-state-machine');
-    const mockStateMachineInstance = {
-        onChange: jest.fn(() => ({
-            unsubscribe: jest.fn()
-        })),
-    };
-
-    return {
-        ...actualModule,
-        StateMachine: {
-            getInstance: jest.fn(() => mockStateMachineInstance),
-        },
-    };
-});
+jest.mock('@state-management/simple-state-machine');
 
 describe('CounterDisplay', () => {
-    let mockStateMachineInstance: any;
+    let mockStateMachine: any;
 
     beforeEach(() => {
-        mockStateMachineInstance = StateMachine.getInstance();
+        // Reset mock before each test
+        mockStateMachine = setupMockStateMachine({});
+
+        (StateMachine.getInstance as jest.Mock).mockReturnValue(mockStateMachine);
         jest.clearAllMocks();
     });
 
@@ -36,7 +26,7 @@ describe('CounterDisplay', () => {
     it('updates counter value when state changes', async () => {
         // Mock the onChange function to simulate state changes
         const mockOnChangeCallback = jest.fn();
-        mockStateMachineInstance.onChange.mockImplementation((key, callback) => {
+        mockStateMachine.onChange.mockImplementation((key, callback) => {
             if (key === counterKey) {
                 mockOnChangeCallback.mockImplementation(callback);
                 return { unsubscribe: jest.fn() };

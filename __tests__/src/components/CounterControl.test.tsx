@@ -1,28 +1,20 @@
 import React from 'react';
 import {fireEvent, render} from '@testing-library/react-native';
 import CounterControl from '../../../src/components/CounterControl.tsx';
-import {StateMachine} from 'simple-state-machine';
+import { StateMachine } from '@state-management/simple-state-machine';
+import {setupMockStateMachine} from "@state-management/state-machine-react/tests";
 import {DecrementCounterCommand, IncrementCounterCommand} from '../../../src/commands/CounterCommands.ts';
 
-jest.mock('simple-state-machine', () => {
-    const actual = jest.requireActual('simple-state-machine');
-    const stateMachineInstance = {
-        dispatch: jest.fn(),
-    };
-    return {
-        ...actual,
-        StateMachine: {
-            getInstance: jest.fn(() => stateMachineInstance),
-        },
-    };
-});
+jest.mock('@state-management/simple-state-machine');
 
 describe('CounterControl', () => {
-    let stateMachineInstance: any;
+    let mockStateMachine: any;
 
     beforeEach(() => {
         // Reset mock before each test
-        stateMachineInstance = StateMachine.getInstance();
+        mockStateMachine = setupMockStateMachine({});
+
+        (StateMachine.getInstance as jest.Mock).mockReturnValue(mockStateMachine);
         jest.clearAllMocks();
     });
 
@@ -37,7 +29,7 @@ describe('CounterControl', () => {
 
         fireEvent.press(getByText('Increment'));
 
-        expect(stateMachineInstance.dispatch).toHaveBeenCalledWith(
+        expect(mockStateMachine.dispatch).toHaveBeenCalledWith(
             expect.any(IncrementCounterCommand)
         );
     });
@@ -47,7 +39,7 @@ describe('CounterControl', () => {
 
         fireEvent.press(getByText('Decrement'));
 
-        expect(stateMachineInstance.dispatch).toHaveBeenCalledWith(
+        expect(mockStateMachine.dispatch).toHaveBeenCalledWith(
             expect.any(DecrementCounterCommand)
         );
     });
