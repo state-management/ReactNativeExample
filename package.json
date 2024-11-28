@@ -1,6 +1,7 @@
 {
   "name": "ReactNativeExample",
-  "version": "0.0.1",
+  "version": "1.0.0",
+  "description": "A sample react native app showing the use of @state-management/state-machine-react.",
   "private": true,
   "scripts": {
     "android": "react-native run-android",
@@ -38,5 +39,16 @@
   },
   "engines": {
     "node": ">=18"
-  }
+  },
+  "keywords": [
+    "state-management",
+    "command-pattern",
+    "typescript",
+    "rxjs",
+    "example",
+    "react",
+    "react-native"
+  ],
+  "author": "Gopakumar Nair",
+  "license": "MIT"
 }

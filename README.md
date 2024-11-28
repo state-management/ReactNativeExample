@@ -2,7 +2,7 @@
 
 This is an example project demonstrating how to use the
 [**state-machine-react**](https://www.npmjs.com/package/@state-management/state-machine-react).
-library with React Native. The project showcases:
+library with React Native app. The project showcases:
 
 - Subscribing to state changes using the `fromState` hook.
 - Dispatching commands using the `useDispatcher` hook.
@@ -19,7 +19,7 @@ The [**state-machine-react**](https://www.npmjs.com/package/@state-management/st
 
 ## Prerequisites
 Make sure you have the following installed:
-- Node.js (16.x or later)
+- Node.js (18.x or later)
 - npm (8.x or later)
 
 
