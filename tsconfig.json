@@ -1,8 +1,6 @@
 {
   "extends": "@react-native/typescript-config/tsconfig.json",
   "compilerOptions": {
-    "paths": {
-      "simple-state-machine": ["./node_modules/simple-state-machine"]
-    }
+    "moduleResolution": "node"
   }
 }
